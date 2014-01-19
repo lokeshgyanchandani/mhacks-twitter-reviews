@@ -52,4 +52,4 @@ app.get('/getproductdata/:prodname', function (req, res) {
 
 
 
-app.listen(1215);
+app..listen(process.env.PORT || 5000);
