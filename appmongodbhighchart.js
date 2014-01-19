@@ -3,7 +3,7 @@ var application_root = __dirname,
     express = require("express"),
         path = require("path");
         //var databaseUrl = "twitteranalytics"; // "username:password@example.com/mydb"
-        var databaseUrl = "lokesh:lokesh1@ds027729.mongolab.com:27729/twitteranalytics";
+        var databaseUrl = "lokesh:lokesh1@ds027819.mongolab.com:27819/twitteranalytics";
 var collections = ["analytics"]
 var db = require("mongojs").connect(databaseUrl, collections);
 
