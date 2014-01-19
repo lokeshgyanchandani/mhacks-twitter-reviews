@@ -1,0 +1,161 @@
+
+
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>Highcharts Example</title>
+      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+      <script type="text/javascript">
+         $(document).ready(function() {
+         $("#productselect").change(function() {
+			 if ($(this).val() != "selectone")
+			{mydatapos = [];
+         mydataneg = [];
+         categs = [];
+           requestData($(this).val());} else {
+			   location.reload(true);
+		   }
+           //alert("Handler for .change() called.");
+         });
+         
+         function requestData(data) {
+			 $.ajax({
+				 url: 'http://product-reviews.herokuapp.com/getproductdata/'+data,
+				 type: "GET",
+				 dataType: "json",
+				 success: function(seed) {
+					 var jsonobj = seed;
+					 var obj = jQuery.parseJSON(jsonobj);
+					 for(i=0;i<obj.length;i++)
+					 {
+						 if ((parseInt(obj[i].poscount) + parseInt(obj[i].negcount)) > 10)
+					  
+					  {mydatapos.push(parseInt(obj[i].poscount));
+					  mydataneg.push(parseInt(obj[i].negcount)); 
+					  categs.push(obj[i].country);
+				  }
+					 }
+					 // Chart
+					 $('#container').highcharts ({
+					 chart: {
+							   type: 'column'
+						   },
+						   title: {
+							   text: 'Stacked column chart'
+						   },
+						   xAxis: {
+							   categories: categs
+						   },
+						   yAxis: {
+							   min: 0,
+							   title: {
+								   text: 'Product Reviews'
+							   },
+							   stackLabels: {
+								   enabled: true,
+								   style: {
+									   fontWeight: 'bold',
+									   color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+								   }
+							   }
+						   },
+						   legend: {
+							   align: 'right',
+							   x: -70,
+							   verticalAlign: 'top',
+							   y: 20,
+							   floating: true,
+							   backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColorSolid) || 'white',
+							   borderColor: '#CCC',
+							   borderWidth: 1,
+							   shadow: false
+						   },
+						   tooltip: {
+							   formatter: function() {
+								   return this.series.name +': '+ this.y +'<br/>'+
+									   'Total: '+ this.point.stackTotal;
+							   }
+						   },
+						   plotOptions: {
+							   column: {
+								   stacking: 'normal',
+								   dataLabels: {
+									   enabled: true,
+									   color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+								   }
+							   }
+						   },
+						   
+						   
+						   series: [{
+							   name: 'Positive',
+							   data: mydatapos
+								},
+								{name: 'Negative',
+							   data: mydataneg}
+						   ],
+					 });				
+				 },
+				 error: function(xhr, ajaxOptions, thrownError) {
+					alert("error");
+				 }
+			 });
+         }
+          });
+      </script>
+      <style>
+         table {
+         font: normal 13px arial;
+         color: #3a3a3a;
+         }
+         input.submitNice{
+         -moz-border-radius: 3px;
+         -webkit-border-radius: 3px;
+         border-radius: 3px;
+         -moz-box-shadow: 0 1px 0 rgba(255,255,255,0.33) inset;
+         -webkit-box-shadow: 0 0 1px rgba(255,255,255,0.33) inset;
+         box-shadow: 0 1px 0 rgba(255,255,255,0.33) inset;
+         background: #448d00;
+         border: solid 1px #356d0c;
+         color: #fff;
+         padding: 5px;
+         font: normal 13px arial;
+         text-shadow: 0px 0px #fff;
+         }
+         th h3, td h3{
+         font:11px;
+         }
+         .nice-select {
+         background: #fafafa !important;
+         border: solid 1px #ccc !important;
+         padding: 3px !important;
+         }
+      </style>
+   </head>
+   <body>
+      <form action="" method="post">
+         <table>
+            <tr>
+               <td><b>Seeds :</b></td>
+               <td>
+                  <select id="productselect" name="seed" class="nice-select" >
+					  <option value="selectone">Select one</option>
+                     <option value="Iphone4">iPhone4</option>
+                     <option value="Nexus5">Nexus5</option>
+                     <option value="SamsungS4">Samsung S4</option>
+                     <option value="mercedes_benz">Mercedes Benz</option>
+                     <option value="toyota">Toyota</option>
+                     
+                  </select>
+               </td>
+            </tr>
+         </table>
+         <hr>
+      </form>
+      <script src="http://code.highcharts.com/highcharts.js"></script>
+      <script src="http://code.highcharts.com/modules/exporting.js"></script>
+      <div id="container" style="width: 100%; height: 400px; margin: 0 auto"></div>
+   </body>
+</html>
+
