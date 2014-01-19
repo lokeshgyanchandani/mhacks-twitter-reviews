@@ -1,8 +1,8 @@
 var application_root = __dirname,
     express = require("express"),
 	path = require("path");
-	var databaseUrl = "faodb"; // "username:password@example.com/mydb"
-var collections = ["seeds"]
+	var databaseUrl = "lokesh:lokesh1@ds027729.mongolab.com:27729/twitteranalytics"; // "username:password@example.com/mydb"
+var collections = ["Nexus5"]
 var db = require("mongojs").connect(databaseUrl, collections);
 
 var app = express();
@@ -26,26 +26,33 @@ app.get('/api', function (req, res) {
 });
 
 
-app.get('/getseeddata/:seedname', function (req, res) {
+app.get('/getproductdata/:product', function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
-    seed = req.params.seedname;
-	db.seeds.find({seedname:seed}, function(err, seeds) {
-	if( err || !seeds) console.log("No seeds found");
-	  else 
-	{
-		res.writeHead(200, {'Content-Type': 'text/json'});
-		seedscollection = seeds[0].seedprice;
+    product = req.params.product;
+	db.product.find(function(err, cursor) {
 		str = '[';
-		//console.log(seedscollection);
+		res.writeHead(200, {'Content-Type': 'text/json'});
+
+		cursor.each(function(err, countrydetail) {
+			if( err || !countrydetail) console.log("No seeds found");
+		  else 
+		{
+			//res.writeHead(200, {'Content-Type': 'text/json'});
+			//seedscollection = seeds[0].seedprice;
+			//str = '[';
+			//console.log(seedscollection);
 		
-		seedscollection.forEach( function(seed) {
-		   str = str + '{"month":"'+ seed.mmonth + '","price":"'+ seed.price +'"},';
-		});
-		str = str.substring(0,str.length-1)
-		str = str + ']';
-		res.end(JSON.stringify(str));
-	}
-  });
+			//seedscollection.forEach( function(seed) {
+			   str = str + '{"country":"'+ countrydetail.country + '","positive":"'+ countrydetail.positive + '","negative":"' + countrydetail.negative +'"},';
+			//});
+			str = str.substring(0,str.length-1)
+			//str = str + ']';
+			//res.end(JSON.stringify(str));
+		}
+ 	 }
+	str = str + ']';
+	res.end(JSON.stringify(str));
+);
 });
 
 

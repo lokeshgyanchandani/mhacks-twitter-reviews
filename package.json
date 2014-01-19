@@ -2,7 +2,7 @@
   "name": "mhacks-twitter-reviews",
   "version": "0.0.0",
   "description": "MHacks 2014 demo",
-  "main": "web.js",
+  "main": "appmongodbhighchart.js",
   "dependencies": {
     "mongojs": "~0.7.5",
     "logfmt": "~0.18.1",
