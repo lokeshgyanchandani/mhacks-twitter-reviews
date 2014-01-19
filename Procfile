@@ -1,1 +1,1 @@
-web: node appmongodbhighchart.js
+web: node web.js
