@@ -50,4 +50,4 @@ app.get('/getseeddata/:seedname', function (req, res) {
 
 
 
-app.listen(1213);
+app.listen(process.env.PORT || 5000)
