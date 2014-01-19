@@ -1,8 +1,10 @@
+
 var application_root = __dirname,
     express = require("express"),
-	path = require("path");
-	var databaseUrl = "lokesh:lokesh1@ds027729.mongolab.com:27729/twitteranalytics"; // "username:password@example.com/mydb"
-var collections = ["Nexus5"]
+        path = require("path");
+        //var databaseUrl = "twitteranalytics"; // "username:password@example.com/mydb"
+        var databaseUrl = "lokesh:lokesh1@ds027729.mongolab.com:27729/twitteranalytics";
+var collections = ["analytics"]
 var db = require("mongojs").connect(databaseUrl, collections);
 
 var app = express();
@@ -26,35 +28,28 @@ app.get('/api', function (req, res) {
 });
 
 
-app.get('/getproductdata/:product', function (req, res) {
+app.get('/getproductdata/:prodname', function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
-    product = req.params.product;
-	db.product.find(function(err, cursor) {
-		str = '[';
-		res.writeHead(200, {'Content-Type': 'text/json'});
-
-		cursor.each(function(err, countrydetail) {
-			if( err || !countrydetail) console.log("No seeds found");
-		  else 
-		{
-			//res.writeHead(200, {'Content-Type': 'text/json'});
-			//seedscollection = seeds[0].seedprice;
-			//str = '[';
-			//console.log(seedscollection);
-		
-			//seedscollection.forEach( function(seed) {
-			   str = str + '{"country":"'+ countrydetail.country + '","positive":"'+ countrydetail.positive + '","negative":"' + countrydetail.negative +'"},';
-			//});
-			str = str.substring(0,str.length-1)
-			//str = str + ']';
-			//res.end(JSON.stringify(str));
-		}
- 	 }
-	str = str + ']';
-	res.end(JSON.stringify(str));
-);
+    productN = req.params.prodname;
+        db.analytics.find({product:productN}, function(err, products) {
+        if( err || !products) console.log("No products found");
+         else
+        {
+                res.writeHead(200, {'Content-Type': 'text/json'});
+                productcollection = products[0].countrydata;
+                str = '[';
+                //console.log(seedscollection);
+                
+                productcollection.forEach( function(productCountry) {
+                 str = str + '{"country":"'+ productCountry.country + '","poscount":"'+ productCountry.poscount + '","negcount":"' + productCountry.negcount +'"},';
+                });
+                str = str.substring(0,str.length-1)
+                str = str + ']';
+                res.end(JSON.stringify(str));
+        }
+  });
 });
 
 
 
-app.listen(process.env.PORT || 5000)
+app.listen(1215);
